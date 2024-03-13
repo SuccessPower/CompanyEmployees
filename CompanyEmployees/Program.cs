@@ -1,16 +1,23 @@
 using CompanyEmployees.Extensions;
+using LoggerService;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.Logging.Abstractions;
+using NLog;
 var builder = WebApplication.CreateBuilder(args);
+
+//LoggerManager.Setup().LoadCongiruationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
 // Add services to the container.
 builder.Services.ConfigureCors();
 builder.Services.ConfigureIISIntegration();
 
 
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
-if (app.environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 		app.UseDeveloperExceptionPage();
 else
 		app.UseHsts();
@@ -19,7 +26,7 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseForwardedHeaders(new FoarwardedHeadersOptions
+app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
 		ForwardedHeaders = ForwardedHeaders.All
 });
