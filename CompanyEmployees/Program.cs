@@ -5,11 +5,12 @@ using Microsoft.Extensions.Logging.Abstractions;
 using NLog;
 var builder = WebApplication.CreateBuilder(args);
 
-//LoggerManager.Setup().LoadCongiruationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
 // Add services to the container.
 builder.Services.ConfigureCors();
 builder.Services.ConfigureIISIntegration();
+builder.Services.ConfigureLoggerService();
 
 
 
