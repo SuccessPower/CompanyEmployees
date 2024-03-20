@@ -1,4 +1,5 @@
-﻿using Entities.Entities;
+﻿using Contracts;
+using Entities.Entities;
 
 namespace Repository
 {

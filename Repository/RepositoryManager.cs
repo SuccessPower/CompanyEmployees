@@ -1,8 +1,10 @@
-﻿namespace Repository
+﻿using Contracts;
+
+namespace Repository
 {
     public sealed class RepositoryManager : IRepositoryManager
     {
-        // Trying to push
+        // Trying to push   
         private readonly RepositoryContext _repositoryContext;
         private readonly Lazy<ICompanyRepository> _companyRepository;
         private readonly Lazy<IEmployeeRepository> _employeeRepository;
