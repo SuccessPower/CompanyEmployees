@@ -1,4 +1,5 @@
 using CompanyEmployees.Extensions;
+using Contracts;
 using LoggerService;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -23,6 +24,11 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+var logger = app.Services.GetRequiredService<ILoggerManager>();
+app.ConfigureExceptionHandler(logger);
+if(app.Environment.IsProduction())
+	app.UseHsts();
 
 if (app.Environment.IsDevelopment())
 		app.UseDeveloperExceptionPage();
