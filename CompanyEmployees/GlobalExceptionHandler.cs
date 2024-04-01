@@ -1,4 +1,5 @@
-﻿using Entities.ErrorModel;
+﻿using Contracts;
+using Entities.ErrorModel;
 using Microsoft.AspNetCore.Diagnostics;
 using System.Net;
 
@@ -6,9 +7,9 @@ namespace CompanyEmployees
 {
     public class GlobalExceptionHandler : IExceptionHandler
     {
-        private readonly ILogger _logger;
+        private readonly ILoggerManager _logger;
 
-        public GlobalExceptionHandler(ILogger logger)
+        public GlobalExceptionHandler(ILoggerManager logger)
         {
             _logger = logger;
         }
@@ -16,20 +17,19 @@ namespace CompanyEmployees
         public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
         {
             httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            httpContext.Response.ContentType = "application/json";
+            httpContext.Response.ContentType = "application/json"; 
+            var contextFeature = httpContext.Features.Get<IExceptionHandlerFeature>();
 
-            var contextFeature = httpContext.Features.Get<IExceptionHandler>();
             if (contextFeature != null)
             {
                 _logger.LogError($"Something went wrong: {exception.Message}");
 
                 await httpContext.Response.WriteAsync(new ErrorDetails()
                 {
-                    StatusCode = httpContext.Response.StatusCode, 
-                    Message = exception.Message,
+                    StatusCode = httpContext.Response.StatusCode,
+                    Message = "Internal Server Error.",
                 }.ToString());
             }
-
             return true;
         }
     }
