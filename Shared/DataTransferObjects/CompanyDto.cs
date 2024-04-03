@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Shared.DataTransferObjects
 {
-		//public class CompanyDto
-		//{
-		//}
-		public record CompanyDto(Guid Id, string Name, string FullAddress);
+		public class CompanyDto
+		{
+				public Guid Id { get; init; }
+				public string? Name { get; init; }
+				public string? FullAddress { get; init; }
+		}
+		//[Serializable]
+		//public record CompanyDto(Guid Id, string Name, string FullAddress);
 }
