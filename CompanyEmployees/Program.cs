@@ -1,10 +1,8 @@
 using CompanyEmployees;
 using CompanyEmployees.Extensions;
-using Contracts;
-using LoggerService;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.Logging.Abstractions;
 using NLog;
+
 var builder = WebApplication.CreateBuilder(args);
 
 LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
@@ -26,7 +24,8 @@ builder.Services.AddControllers(config => {
 		config.RespectBrowserAcceptHeader = true;
 		config.ReturnHttpNotAcceptable = true;
 }).AddXmlDataContractSerializerFormatters()
-.AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
+  .AddCustomCSVFormatter()
+	.AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
 
 
 builder.Services.AddControllers();
