@@ -23,7 +23,7 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
-    options.SuppressModelStateInvalidFilter = true;
+		options.SuppressModelStateInvalidFilter = true;
 });
 
 builder.Services.AddControllers(config => {
