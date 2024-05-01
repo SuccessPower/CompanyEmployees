@@ -4,11 +4,6 @@ using Entities.Entities;
 using Entities.Exceptions;
 using Service.Contracts;
 using Shared.DataTransferObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service
 {
@@ -26,8 +21,8 @@ namespace Service
             _mapper = mapper;
         }
 
-				public EmployeeDto CreateEmployeeForCompany(Guid companyId, EmployeeForCreationDto employeeForCreation, bool trackChanges)
-				{
+        public EmployeeDto CreateEmployeeForCompany(Guid companyId, EmployeeForCreationDto employeeForCreation, bool trackChanges)
+        {
             var company = _repository.Company.GetCompany(companyId, trackChanges);
             if (company == null)
                 throw new CompanyNotFoundException(companyId);
@@ -39,35 +34,48 @@ namespace Service
 
             var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);
             return employeeToReturn;
-				}
+        }
 
-				public EmployeeDto GetEmployee(Guid companyId, Guid id, bool trackChanges)
-				{
+        public EmployeeDto GetEmployee(Guid companyId, Guid id, bool trackChanges)
+        {
             var company = _repository.Company.GetCompany(companyId, trackChanges);
             if (company == null)
                 throw new CompanyNotFoundException(companyId);
 
-            var employeeDb = _repository.Employee.getEmployee(companyId, id, trackChanges);
-            if(employeeDb == null)
+            var employeeDb = _repository.Employee.GetEmployee(companyId, id, trackChanges);
+            if (employeeDb == null)
                 throw new EmployeeNotFoundException(companyId);
 
             var employee = _mapper.Map<EmployeeDto>(employeeDb);
 
             return employee;
 
-				}
+        }
 
-				public IEnumerable<EmployeeDto> GetEmployees(Guid companyId, bool trackChanges)
-				{
+        public IEnumerable<EmployeeDto> GetEmployees(Guid companyId, bool trackChanges)
+        {
             var company = _repository.Company.GetCompany(companyId, trackChanges);
-            if (company == null) 
+            if (company == null)
                 throw new CompanyNotFoundException(companyId);
 
             var employeesFromDb = _repository.Employee.GetEmployees(companyId, trackChanges);
             var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
             return employeesDto;
-				}
+        }
 
+        public void DeleteEmployeeForCompany(Guid companyId, Guid id, bool trackChanges)
+        {
+            var company = _repository.Company.GetCompany(companyId, trackChanges);
+            if (company == null)
+                throw new CompanyNotFoundException(companyId);
 
-		}
+            var employeeForCompany = _repository.Employee.GetEmployee(companyId, id, trackChanges);
+
+            if(employeeForCompany == null)
+                throw new EmployeeNotFoundException(companyId);
+
+            _repository.Employee.DeleteEmployee(employeeForCompany);
+            _repository.Save();
+        }
+    }
 }
