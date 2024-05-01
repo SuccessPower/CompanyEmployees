@@ -47,5 +47,37 @@ namespace Service
             var companyDto = _mapper.Map<CompanyDto>(company);
             return companyDto;
         }
+
+        public IEnumerable<CompanyDto> GetByIds(IEnumerable<Guid> ids, bool trackChanges)
+        {
+            if (ids is null)
+                throw new IdParametersBadRequestExecption();               
+
+            var companyEnitites = _repository.Company.GetByIds(ids, trackChanges);
+
+            if (ids.Count() != companyEnitites.Count())
+                throw new CollectionByIdsBadRequestException();
+            var companiesToReturn = _mapper.Map<IEnumerable<CompanyDto>>(companyEnitites);
+            
+            return companiesToReturn;
+        }
+
+        public (IEnumerable<CompanyDto> companies, string ids) CreateCompanyCollection
+            (IEnumerable<CompanyForCreationDto> companyCollection)
+        {
+            if (companyCollection is null)
+                throw new CompanyCollectionBadRequest();
+
+            var companyEntities = _mapper.Map<IEnumerable<Company>>(companyCollection);
+            foreach(var company in companyEntities)
+            {
+                _repository.Company.CreateCompany(company);
+            }
+            _repository.Save();
+
+            var companyCollectionsToReturn = _mapper.Map<IEnumerable<CompanyDto>>(companyEntities);
+            var ids = string.Join(",", companyCollectionsToReturn.Select(c => c.Id));
+            return (companies: companyCollectionsToReturn, ids: ids);
+        }
     }
 }
