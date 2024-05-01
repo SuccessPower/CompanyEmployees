@@ -55,6 +55,7 @@ namespace CompanyEmployees.Presentation.Controllers
         {
             _service.CompanyService.DeleteCompany(id, trackChanges: false);
             return NoContent();
+            //
         }
     }
 }
