@@ -73,7 +73,12 @@ namespace CompanyEmployees.Presentation.Controllers
             var result = _service.EmployeeService.GetEmployeeForPatch(companyId, id, 
                 compTrackChanges: false, empTrackChanges: true);
 
+            TryValidateModel(result.employeeToPatch);
+
             patchDoc.ApplyTo(result.employeeToPatch);
+
+            if (!ModelState.IsValid) return 
+                    UnprocessableEntity(ModelState);
 
             _service.EmployeeService.SaveChangesForPatch(result.employeeToPatch, result.employeeEntity);
 
