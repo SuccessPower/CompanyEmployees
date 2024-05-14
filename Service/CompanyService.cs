@@ -89,7 +89,7 @@ namespace Service
             _repository.Company.DeleteCompany(company);
             await _repository.SaveAsync();
         }
-
+        //
         public async Task UpdateCompanyAsync(Guid companyId, CompanyForUpdateDto companyForUpdate, bool trackChanges)
         {
             var companyEntity = await _repository.Company.GetCompanyAsync(companyId, trackChanges);
