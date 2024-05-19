@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities.Entities;
 using Microsoft.EntityFrameworkCore;
+using Shared.RequestFeatures;
 
 namespace Repository
 {
@@ -23,9 +24,13 @@ namespace Repository
             await FindByCondition(e => e.CompanyId.Equals(companyId) && e.Id.Equals(id), trackChanges)
                 .SingleOrDefaultAsync();
 
-        public async Task<IEnumerable<Employee>> GetEmployeesAsync(Guid companyId, bool trackChanges) =>
+        public async Task<IEnumerable<Employee>> GetEmployeesAsync(Guid companyId, 
+            EmployeeParameters employeeParameters, bool trackChanges) =>
             await FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges)
-            .OrderBy(e => e.Name).ToListAsync();
+            .OrderBy(e => e.Name)
+            .Skip((employeeParameters.PageNumber -1) * employeeParameters.PageSize)
+            .Take(employeeParameters.PageSize)
+            .ToListAsync();
 
         public void DeleteEmployee(Employee employee) => Delete(employee);
     }

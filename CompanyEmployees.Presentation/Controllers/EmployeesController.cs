@@ -15,13 +15,16 @@ namespace CompanyEmployees.Presentation.Controllers
         public EmployeesController(IServiceManager service) => _service = service;
 
         [HttpGet]
-        public IActionResult GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
+        public IActionResult GetEmployeesForCompany(Guid companyId, 
+            [FromQuery] EmployeeParameters employeeParameters)
         {
-            var employees = _service.EmployeeService.GetEmployeesAsync(companyId, trackChanges: false);
+            var employees = _service.EmployeeService.GetEmployeesAsync(companyId, 
+                employeeParameters, trackChanges: false);
+
             return Ok(employees);
         }
 
-        [HttpGet("id:guid", Name = "GetEmployeeForCompany")]
+        [HttpGet("id:guid", Name = "GetEmployeeFoxrCompany")]
         public IActionResult GetEmployeeForCompany(Guid companyId, Guid id)
         {
             var employee = _service.EmployeeService.GetEmployeeAsync(companyId, id, trackChanges: false);
@@ -29,8 +32,8 @@ namespace CompanyEmployees.Presentation.Controllers
         }
 
         [HttpPost]
-				[ServiceFilter(typeof(ValidationFilterAttribute))]
-				public IActionResult CreateEmployeeForCompany(Guid companyId, [FromBody] EmployeeForCreationDto employee)
+		[ServiceFilter(typeof(ValidationFilterAttribute))]
+		public IActionResult CreateEmployeeForCompany(Guid companyId, [FromBody] EmployeeForCreationDto employee)
         {
             var employeeToReturn =
                     _service.EmployeeService.CreateEmployeeForCompanyAsync(companyId, employee, trackChanges: false);
@@ -46,8 +49,8 @@ namespace CompanyEmployees.Presentation.Controllers
         }
 
         [HttpPut("{id:guid}")]
-				[ServiceFilter(typeof(ValidationFilterAttribute))]
-				public IActionResult UpdateEmployeeForUpdate(Guid companyId, Guid id, [FromBody] EmployeeForUpdateDto employee)
+		[ServiceFilter(typeof(ValidationFilterAttribute))]
+		public IActionResult UpdateEmployeeForUpdate(Guid companyId, Guid id, [FromBody] EmployeeForUpdateDto employee)
         {
             _service.EmployeeService.UpdateEmployeeForCompany(companyId, id, employee,
                 compTrackChanges: false, empTrackChanges: true);

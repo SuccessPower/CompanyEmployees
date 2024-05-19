@@ -4,6 +4,7 @@ using Entities.Entities;
 using Entities.Exceptions;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Service
 {
@@ -21,11 +22,11 @@ namespace Service
             _mapper = mapper;
         }
 
-        public async Task<EmployeeDto> CreateEmployeeForCompanyAsync(Guid companyId, EmployeeForCreationDto employeeForCreation, bool trackChanges)
+        public async Task<EmployeeDto> CreateEmployeeForCompanyAsync(Guid companyId, EmployeeForCreationDto employeeForCreationDto,  bool trackChanges)
         {
             await CheckIfCompanyExists(companyId, trackChanges);
 
-            var employeeEntity = _mapper.Map<Employee>(employeeForCreation);
+            var employeeEntity = _mapper.Map<Employee>(employeeForCreationDto);
 
             _repository.Employee.CreateEmployeeForCompany(companyId, employeeEntity);
             _repository.SaveAsync();
@@ -46,11 +47,13 @@ namespace Service
 
         }
 
-        public async Task<IEnumerable<EmployeeDto>> GetEmployeesAsync(Guid companyId, bool trackChanges)
+        public async Task<IEnumerable<EmployeeDto>> GetEmployeesAsync(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
         {
             await CheckIfCompanyExists(companyId, trackChanges);
 
-            var employeesFromDb = await _repository.Employee.GetEmployeesAsync(companyId, trackChanges);
+            var employeesFromDb = await _repository.Employee
+                .GetEmployeesAsync(companyId, employeeParameters, trackChanges);
+
             var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
             return employeesDto;
         }
