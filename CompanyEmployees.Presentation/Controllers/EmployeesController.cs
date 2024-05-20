@@ -15,16 +15,16 @@ namespace CompanyEmployees.Presentation.Controllers
         public EmployeesController(IServiceManager service) => _service = service;
 
         [HttpGet]
-        public IActionResult GetEmployeesForCompany(Guid companyId, 
+        public async Task<IActionResult> GetEmployeesForCompany(Guid companyId, 
             [FromQuery] EmployeeParameters employeeParameters)
         {
-            var employees = _service.EmployeeService.GetEmployeesAsync(companyId, 
+            var employees = await _service.EmployeeService.GetEmployeesAsync(companyId, 
                 employeeParameters, trackChanges: false);
 
             return Ok(employees);
         }
 
-        [HttpGet("id:guid", Name = "GetEmployeeFoxrCompany")]
+        [HttpGet("id:guid", Name = "GetEmployeeForCompany")]
         public IActionResult GetEmployeeForCompany(Guid companyId, Guid id)
         {
             var employee = _service.EmployeeService.GetEmployeeAsync(companyId, id, trackChanges: false);
@@ -33,26 +33,29 @@ namespace CompanyEmployees.Presentation.Controllers
 
         [HttpPost]
 		[ServiceFilter(typeof(ValidationFilterAttribute))]
-		public IActionResult CreateEmployeeForCompany(Guid companyId, [FromBody] EmployeeForCreationDto employee)
+		public async Task<IActionResult> CreateEmployeeForCompany
+            (Guid companyId, [FromBody] EmployeeForCreationDto employee)
         {
             var employeeToReturn =
-                    _service.EmployeeService.CreateEmployeeForCompanyAsync(companyId, employee, trackChanges: false);
+                    await _service.EmployeeService.CreateEmployeeForCompanyAsync(companyId, employee, 
+                    trackChanges: false);
 
-            return CreatedAtRoute("GetEmployeeForCompany", new { companyId, id = employeeToReturn.Id }, employeeToReturn);
+            return CreatedAtRoute("GetEmployeeForCompany", new { companyId, id = employeeToReturn.Id }, 
+                employeeToReturn);
         }
 
         [HttpDelete("{id:guid}")]
-        public IActionResult DeleteEmployeeForCompany(Guid companyId, Guid id, bool trackChanges)
+        public async Task<IActionResult> DeleteEmployeeForCompany(Guid companyId, Guid id, bool trackChanges)
         {
-            _service.EmployeeService.DeleteEmployeeForCompany(companyId, id, trackChanges);
+            await _service.EmployeeService.DeleteEmployeeForCompany(companyId, id, trackChanges);
             return NoContent();
         }
 
         [HttpPut("{id:guid}")]
 		[ServiceFilter(typeof(ValidationFilterAttribute))]
-		public IActionResult UpdateEmployeeForUpdate(Guid companyId, Guid id, [FromBody] EmployeeForUpdateDto employee)
+		public async Task<IActionResult> UpdateEmployeeForUpdate(Guid companyId, Guid id, [FromBody] EmployeeForUpdateDto employee)
         {
-            _service.EmployeeService.UpdateEmployeeForCompany(companyId, id, employee,
+            await _service.EmployeeService.UpdateEmployeeForCompany(companyId, id, employee,
                 compTrackChanges: false, empTrackChanges: true);
 
             return NoContent();
@@ -75,7 +78,7 @@ namespace CompanyEmployees.Presentation.Controllers
             if (!ModelState.IsValid) return 
                     UnprocessableEntity(ModelState);
 
-            _service.EmployeeService.SaveChangesForPatch(result.employeeToPatch, result.employeeEntity);
+            await _service.EmployeeService.SaveChangesForPatch(result.employeeToPatch, result.employeeEntity);
 
             return NoContent();
         }

@@ -29,7 +29,7 @@ namespace Service
             var employeeEntity = _mapper.Map<Employee>(employeeForCreationDto);
 
             _repository.Employee.CreateEmployeeForCompany(companyId, employeeEntity);
-            _repository.SaveAsync();
+            await _repository.SaveAsync();
 
             var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);
             return employeeToReturn;
@@ -68,7 +68,7 @@ namespace Service
             _repository.SaveAsync();
         }
 
-        public async void UpdateEmployeeForCompany(Guid companyId, Guid id, EmployeeForUpdateDto employeeForUpdate, 
+        public async Task UpdateEmployeeForCompany(Guid companyId, Guid id, EmployeeForUpdateDto employeeForUpdate, 
             bool compTrackChanges, bool empTrackChanges)
         {
             await CheckIfCompanyExists(companyId, compTrackChanges);
@@ -92,7 +92,7 @@ namespace Service
             return (employeeToPatch: employeeToPatch, employeeEntity: employeeDb);
         }
 
-        public void SaveChangesForPatch(EmployeeForUpdateDto employeeToPatch, Employee employeeEntity)
+        public async Task SaveChangesForPatch(EmployeeForUpdateDto employeeToPatch, Employee employeeEntity)
         {
             _mapper.Map(employeeToPatch, employeeEntity);
             _repository.SaveAsync();
