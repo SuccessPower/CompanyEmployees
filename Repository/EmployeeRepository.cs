@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities.Entities;
 using Microsoft.EntityFrameworkCore;
+using Repository.Extensions;
 using Shared.RequestFeatures;
 
 namespace Repository
@@ -25,17 +26,29 @@ namespace Repository
         public async Task<PagedList<Employee>> GetEmployeesAsync(Guid companyId,
             EmployeeParameters employeeParameters, bool trackChanges)
         {
-            var employees = await FindByCondition(e => e.CompanyId.Equals(companyId) && 
-                            (e.Age >= employeeParameters.MinAge && e.Age <= employeeParameters.MaxAge), trackChanges)
-                            .OrderBy(e => e.Name)
-                            .Skip((employeeParameters.PageNumber - 1) * employeeParameters.PageSize)
-                            .Take(employeeParameters.PageSize)
-                            .ToListAsync();
-
-            var count = await FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges).CountAsync();
+            var employees = await FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges)
+                .FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
+                .Search(employeeParameters.SearchTerm)
+                .OrderBy(e => e.Name)
+                .ToListAsync();
 
             return PagedList<Employee>
-                .ToPagedList(employees, employeeParameters.PageNumber, employeeParameters.PageSize);            
+                .ToPagedList(employees, employeeParameters.PageNumber, employeeParameters.PageSize);
+
+            #region commented code
+            //var employees = await FindByCondition(e => e.CompanyId.Equals(companyId) && 
+            //                (e.Age >= employeeParameters.MinAge && e.Age <= employeeParameters.MaxAge), trackChanges)
+            //                .OrderBy(e => e.Name)
+            //                .Skip((employeeParameters.PageNumber - 1) * employeeParameters.PageSize)
+            //                .Take(employeeParameters.PageSize)
+            //                .ToListAsync();
+
+            //var count = await FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges).CountAsync();
+
+            //return PagedList<Employee>
+            //    .ToPagedList(employees, employeeParameters.PageNumber, employeeParameters.PageSize);
+            //    
+            #endregion
         }
         public void DeleteEmployee(Employee employee) => Delete(employee);
     }
