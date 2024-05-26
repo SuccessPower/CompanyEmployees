@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Shared.RequestFeatures
+﻿namespace Shared.RequestFeatures
 {
     public abstract class RequestParameters
     {
@@ -21,6 +15,8 @@ namespace Shared.RequestFeatures
             {
                 _pageSize = (value > maxPageSize) ? value : maxPageSize;
             }
+
         }
+        public string? OrderBy { get; set; }
     }
 }
