@@ -32,7 +32,7 @@ namespace Repository.Extensions
             if (string.IsNullOrWhiteSpace(orderQuery))
                 return employees.OrderBy(e => e.Name);
 
-            return employees.OrderBy(orderQuery)//
+            return employees.OrderBy(orderQuery);
         }
     }
 }
