@@ -1,6 +1,7 @@
 ﻿using CompanyEmployees.Presentation.ActionFilters;
 using CompanyEmployees.Presentation.ModelBinders;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -21,7 +22,7 @@ namespace CompanyEmployees.Presentation.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetCompanies")]
         public async Task<IActionResult> GetCompanies()
         {
             var companies = _service.CompanyService.GetAllCompaniesAsync(trackChanges: false);
@@ -35,7 +36,7 @@ namespace CompanyEmployees.Presentation.Controllers
             return Ok(company);
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CreateCompany")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
         {
