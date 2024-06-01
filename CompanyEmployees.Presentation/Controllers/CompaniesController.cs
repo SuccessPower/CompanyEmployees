@@ -1,4 +1,5 @@
-﻿using CompanyEmployees.Presentation.ActionFilters;
+﻿using Asp.Versioning;
+using CompanyEmployees.Presentation.ActionFilters;
 using CompanyEmployees.Presentation.ModelBinders;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -25,7 +26,7 @@ namespace CompanyEmployees.Presentation.Controllers
         [HttpGet(Name = "GetCompanies")]
         public async Task<IActionResult> GetCompanies()
         {
-            var companies = _service.CompanyService.GetAllCompaniesAsync(trackChanges: false);
+            var companies = await _service.CompanyService.GetAllCompaniesAsync(trackChanges: false);
             return Ok(companies);
         }
 

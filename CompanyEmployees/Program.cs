@@ -27,6 +27,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.ConfigureVersioning();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
