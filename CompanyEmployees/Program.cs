@@ -28,7 +28,8 @@ builder.Services.AddControllers()
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.ConfigureVersioning();
-builder.Services.ConfigureResponseCaching();
+//builder.Services.ConfigureResponseCaching();
+builder.Services.ConfigureOutputCaching();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -45,8 +46,8 @@ builder.Services.AddControllers(config => {
 		config.RespectBrowserAcceptHeader = true;
 		config.ReturnHttpNotAcceptable = true;
 		config.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
-	config.CacheProfiles.Add("120SecondsDuration", new CacheProfile { Duration
-	= 120});
+	//config.CacheProfiles.Add("120SecondsDuration", new CacheProfile { Duration
+	//= 120});
 }).AddXmlDataContractSerializerFormatters()
   .AddCustomCSVFormatter()
 	.AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
@@ -76,7 +77,8 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 });
 
 app.UseCors("CorsPolicy");
-app.UseResponseCaching();
+//app.UseResponseCaching();
+app.UseOutputCache();
 
 app.UseAuthorization();
 
