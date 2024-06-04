@@ -1,14 +1,13 @@
-﻿using Contracts;
-using LoggerService;
-using Repository;
-using Service.Contracts;
-using Service;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.AspNetCore.Mvc;
-using Asp.Versioning;
+﻿using Asp.Versioning;
 using CompanyEmployees.Presentation.Controllers;
+using Contracts;
+using LoggerService;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.EntityFrameworkCore;
+using Repository;
+using Service;
+using Service.Contracts;
 
 namespace CompanyEmployees.Extensions
 {
@@ -91,11 +90,14 @@ namespace CompanyEmployees.Extensions
                    .HasApiVersion(new ApiVersion(1, 0));
                 opt.Conventions.Controller<CompaniesV2Controller>()
                     .HasDeprecatedApiVersion(new ApiVersion(2, 0));
-            }); 
+            });
         }
 
         //public static void ConfigureResponseCaching(this IServiceCollection services) => services.AddResponseCaching();
-        public static void ConfigureOutputCaching(this IServiceCollection services) => services.AddOutputCache();
-
+        public static void ConfigureOutputCaching(this IServiceCollection services) =>
+            services.AddOutputCache(opt =>
+        {
+            opt.AddPolicy("120SecondsDuration", p => p.Expire(TimeSpan.FromSeconds(120)));
+        });
     }
 }

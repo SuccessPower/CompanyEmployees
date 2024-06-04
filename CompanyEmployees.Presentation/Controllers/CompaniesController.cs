@@ -10,6 +10,7 @@ namespace CompanyEmployees.Presentation.Controllers
     [Route("api/companies")]
     [ApiController]
     //[ResponseCache(CacheProfileName = "120SecondsDuration")]
+    [OutputCache(PolicyName = "120SecondsDuration")]
     public class CompaniesController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -36,6 +37,9 @@ namespace CompanyEmployees.Presentation.Controllers
         public async Task<IActionResult> GetCompany(Guid id)
         {
             var company = await _service.CompanyService.GetCompanyAsync(id, trackChanges: false);
+
+            var etag = $"\"{Guid.NewGuid():n}\"";
+            HttpContext.Response.Headers.ETag = etag;
             return Ok(company);
         }
 
@@ -44,7 +48,7 @@ namespace CompanyEmployees.Presentation.Controllers
         public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
         {
             var createdCompany = await _service.CompanyService.CreateCompanyAsync(company);
-            return CreatedAtRoute("CompanyById", new {  id = createdCompany.Id}, createdCompany);
+            return CreatedAtRoute("CompanyById", new { id = createdCompany.Id }, createdCompany);
         }
 
         [HttpGet("collection/({ids})", Name = "CompanyCollection")]
@@ -55,11 +59,11 @@ namespace CompanyEmployees.Presentation.Controllers
         }
 
         [HttpPost("collection")]
-				//[ServiceFilter(typeof(ValidationFilterAttribute))]
-				public async Task<IActionResult> CreateCompanyCollection([FromBody] IEnumerable<CompanyForCreationDto> companyCollection)
+        //[ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> CreateCompanyCollection([FromBody] IEnumerable<CompanyForCreationDto> companyCollection)
         {
             var result = await _service.CompanyService.CreateCompanyCollectionAsync(companyCollection);
-            return CreatedAtRoute("CompanyCollection", new {result.ids}, result.companies);
+            return CreatedAtRoute("CompanyCollection", new { result.ids }, result.companies);
         }
 
         [HttpDelete("{id:guid}")]
@@ -70,11 +74,11 @@ namespace CompanyEmployees.Presentation.Controllers
         }
 
         [HttpPut("{id:guid}")]
-				[ServiceFilter(typeof(ValidationFilterAttribute))]
-				public async Task<IActionResult> UpdateCompany(Guid id, [FromBody] CompanyForUpdateDto company)
-        {             
-            await _service.CompanyService.UpdateCompanyAsync(id, company, trackChanges: true); 
-            return NoContent(); 
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> UpdateCompany(Guid id, [FromBody] CompanyForUpdateDto company)
+        {
+            await _service.CompanyService.UpdateCompanyAsync(id, company, trackChanges: true);
+            return NoContent();
         }
     }
 }
