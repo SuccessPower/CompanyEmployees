@@ -82,6 +82,7 @@ app.UseCors("CorsPolicy");
 //app.UseResponseCaching();
 app.UseOutputCache();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
