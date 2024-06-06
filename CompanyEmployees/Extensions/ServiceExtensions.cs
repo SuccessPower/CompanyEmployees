@@ -112,7 +112,7 @@ namespace CompanyEmployees.Extensions
 								partition => new FixedWindowRateLimiterOptions
 								{
 										AutoReplenishment = true,
-										PermitLimit = 5,
+										PermitLimit = 30,
 										QueueLimit = 2,
 										QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
 										Window = TimeSpan.FromMinutes(1)
