@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 using Entities.LinkModels;
 
 
-namespace Entities.Entities
+namespace Entities.Models
 {
     public class Entity : DynamicObject, IXmlSerializable, IDictionary<string, object>
     {

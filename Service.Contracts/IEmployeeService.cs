@@ -1,5 +1,5 @@
-﻿using Entities.Entities;
-using Entities.LinkModels;
+﻿using Entities.LinkModels;
+using Entities.Models;
 using Shared.DataTransferObjects;
 using Shared.RequestFeatures;
 using System;

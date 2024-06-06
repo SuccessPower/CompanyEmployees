@@ -2,9 +2,9 @@
 
 namespace Service.Contracts;
 
-		public interface IServiceManager
+public interface IServiceManager
 {
     ICompanyService CompanyService { get; }
     IEmployeeService EmployeeService { get; }
-		IAuthenticationService AuthenticationService { get; }
+    IAuthenticationService AuthenticationService { get; }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Dynamic;
 using System.Reflection;
 using Contracts;
-using Entities.Entities;
+using Entities.Models;
 
 namespace Service.DataShaping;
 

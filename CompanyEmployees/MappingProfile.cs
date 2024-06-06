@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Entities.Entities;
+using Entities.Models;
 using Shared.DataTransferObjects;
 
 namespace CompanyEmployees
 {
-	public class MappingProfile : Profile
+    public class MappingProfile : Profile
 	{
         public MappingProfile()
         {
