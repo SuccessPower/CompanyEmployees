@@ -45,6 +45,7 @@ builder.Services.ConfigureOutputCaching();
 builder.Services.ConfigureRateLimitingOptions();
 builder.Services.AddAuthentication();
 builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJWT(builder.Configuration);
 
 
 
