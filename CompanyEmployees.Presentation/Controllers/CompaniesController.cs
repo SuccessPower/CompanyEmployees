@@ -27,7 +27,7 @@ namespace CompanyEmployees.Presentation.Controllers
         }
 
         [HttpGet(Name = "GetCompanies")]
-        [Authorize]
+        [Authorize(Roles = "Manager")]
         [EnableRateLimiting("SpecificPolicy")]
         public async Task<IActionResult> GetCompanies()
         {
