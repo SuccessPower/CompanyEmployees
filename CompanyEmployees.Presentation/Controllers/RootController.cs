@@ -13,6 +13,7 @@ namespace CompanyEmployees.Presentation.Controllers
 
         public RootController(LinkGenerator linkGenerator) =>  _linkGenerator = linkGenerator;
 
+        [HttpGet(Name = "GetRoot")]
         public IActionResult GetRoot([FromHeader(Name = "Accept")] string mediaType)
         {
             if (mediaType.Contains("application/vnd.codemaze.apiroot"))
